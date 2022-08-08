@@ -1,0 +1,5 @@
+services:
+  app:
+    volumes:
+      - ./app:/app
+    command: sh -c '/wait-for db:3306 -- npm run dev'
