@@ -1,0 +1,29 @@
+services:
+  app:
+    build: ./app
+    container_name: nodejs
+    depends_on:
+      - db
+    command: sh -c '/wait-for db:3306 -- node app.js'
+
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nodedb
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - app
+
+volumes:
+  db: {}
